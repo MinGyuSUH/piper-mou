@@ -1,0 +1,165 @@
+<mujocoinclude>
+  <!-- 
+    모든 속성을 각 geom에 직접 명시했으며,
+    원의 둘레를 완벽하게 커버하도록 삼각함수를 이용해
+    각 상자의 위치, 크기, 회전값을 정밀하게 재계산했습니다.
+  -->
+  <body name="washing_machine_body" pos="0.35 0 0.45" euler="1.57 3.14 3.14">
+
+    <!-- ★★★★★ 앞판 (구멍을 만들기 위해 4개 조각으로 분할) ★★★★★ -->
+    <!-- 앞쪽 드럼 입구(지름 370mm)를 기준으로 계산 -->
+    <body name="front_panel_with_hole" pos="0 0.4325 0.36"> <!-- 몸체 앞쪽 끝에 위치 -->
+    <!-- 구멍 위쪽 판 -->
+        <geom name="front_top" type="box" size="0.343 0.005 0.2" pos="0 0 0.9" rgba="0.9 0.9 0.92 0" contype="1" conaffinity="1"/>
+    <!-- 구멍 아래쪽 판 -->
+        <geom name="front_bottom" type="box" size="0.343 0.005 0.165" pos="0 0 0.165" rgba="0.9 0.9 0.92 0" contype="1" conaffinity="1"/>
+    <!-- 구멍 왼쪽 판 (위/아래 판과 겹치지 않는 부분) -->
+        <geom name="front_left" type="box" size="0.079 0.005 0.185" pos="-0.264 0 0.515" rgba="0.9 0.9 0.92 0" contype="1" conaffinity="1"/>
+    <!-- 구멍 오른쪽 판 (위/아래 판과 겹치지 않는 부분) -->
+        <geom name="front_right" type="box" size="0.079 0.005 0.185" pos="0.264 0 0.515" rgba="0.9 0.9 0.92 0" contype="1" conaffinity="1"/>
+
+         <geom name="corner_filler_tr" type="box" size="0.075 0.005 0.075" pos="0.185 0 0.700" euler="0 -0.7854 0" rgba="0.9 0.9 0.92 0" contype="1" conaffinity="1"/>
+        <!-- 왼쪽 위 모서리 -->
+        <geom name="corner_filler_tl" type="box" size="0.075 0.005 0.075" pos="-0.185 0 0.700" euler="0 -0.7854 0" rgba="0.9 0.9 0.92 0" contype="1" conaffinity="1"/>
+        <!-- 오른쪽 아래 모서리 -->
+        <geom name="corner_filler_br" type="box" size="0.075 0.005 0.075" pos="0.185 0 0.330" euler="0 -0.7854 0" rgba="0.9 0.9 0.92 0" contype="1" conaffinity="1"/>
+        <!-- 왼쪽 아래 모서리 -->
+        <geom name="corner_filler_bl" type="box" size="0.075 0.005 0.075" pos="-0.185 0 0.330" euler="0 -0.7854 0" rgba="0.9 0.9 0.92 0" contype="1" conaffinity="1"/>
+    
+    </body>
+
+    <!-- 3. 드럼 부분 -->
+    <body name="drum_assembly" pos="0 0 0.875">
+      <!-- 3-1. 앞쪽 드럼 입구 (반지름 0.185m, 깊이 0.1m) -->
+      <body name="front_drum_hole" pos="0 0.3875 0">
+        <geom name="drum1_seg0" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.1850 0 0.0000" euler="0 0.0000 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg1" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.1819 0 0.0321" euler="0 -0.1745 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg2" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.1728 0 0.0630" euler="0 -0.3491 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg3" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.1581 0 0.0925" euler="0 -0.5236 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg4" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.1381 0 0.1189" euler="0 -0.6981 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg5" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.1139 0 0.1415" euler="0 -0.8727 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg6" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.0865 0 0.1592" euler="0 -1.0472 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg7" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.0573 0 0.1714" euler="0 -1.2217 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg8" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.0274 0 0.1778" euler="0 -1.3963 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg9" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.0000 0 0.1780" euler="0 -1.5708 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg10" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.0274 0 0.1778" euler="0 -1.7453 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg11" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.0573 0 0.1714" euler="0 -1.9199 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg12" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.0865 0 0.1592" euler="0 -2.0944 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg13" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.1139 0 0.1415" euler="0 -2.2689 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg14" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.1381 0 0.1189" euler="0 -2.4435 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg15" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.1581 0 0.0925" euler="0 -2.6180 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg16" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.1728 0 0.0630" euler="0 -2.7925 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg17" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.1819 0 0.0321" euler="0 -2.9671 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg18" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.1850 0 -0.0000" euler="0 -3.1416 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg19" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.1819 0 -0.0321" euler="0 -3.3161 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg20" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.1728 0 -0.0630" euler="0 -3.4907 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg21" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.1581 0 -0.0925" euler="0 -3.6652 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg22" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.1381 0 -0.1189" euler="0 -3.8397 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg23" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.1139 0 -0.1415" euler="0 -4.0143 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg24" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.0865 0 -0.1592" euler="0 -4.1888 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg25" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.0573 0 -0.1714" euler="0 -4.3633 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg26" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.0274 0 -0.1778" euler="0 -4.5379 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg27" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="-0.0000 0 -0.1780" euler="0 -4.7124 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg28" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.0274 0 -0.1778" euler="0 -4.8869 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg29" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.0573 0 -0.1714" euler="0 -5.0615 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg30" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.0865 0 -0.1592" euler="0 -5.2360 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg31" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.1139 0 -0.1415" euler="0 -5.4105 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg32" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.1381 0 -0.1189" euler="0 -5.5851 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg33" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.1581 0 -0.0925" euler="0 -5.7596 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg34" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.1728 0 -0.0630" euler="0 -5.9341 0" size="0.0161 0.0500 0.0161"/>
+        <geom name="drum1_seg35" type="box" rgba="0.8 0.82 0.85 0" contype="1" conaffinity="1" pos="0.1819 0 -0.0321" euler="0 -6.1087 0" size="0.0161 0.0500 0.0161"/>
+      </body>
+      
+      <!-- 2-2. 안쪽 드럼 통 (Inner Drum Tube) -->
+      <!-- 지름 580mm(반지름 0.29m), 깊이 560mm(0.56m). 72개의 box로 구성 -->
+      <!-- Y위치: 몸체 앞면(0.4375) - 앞쪽 입구 깊이(0.1) - 안쪽 통 깊이의 절반(0.28) = 0.0575 -->
+      <body name="inner_drum_tube" pos="0 0.0575 0">
+      <!-- 이 코드는 사용자가 제공한 정확한 계산 결과를 기반으로 생성되었습니다. -->
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.29000 0 0.00000" euler="0 -0.00000 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.28883 0 0.02600" euler="0 -0.08976 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.28534 0 0.05178" euler="0 -0.17952 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.27955 0 0.07715" euler="0 -0.26928 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.27151 0 0.10190" euler="0 -0.35904 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.26128 0 0.12582" euler="0 -0.44880 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.24895 0 0.14874" euler="0 -0.53856 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.23462 0 0.17046" euler="0 -0.62832 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.21839 0 0.19080" euler="0 -0.71808 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.20041 0 0.20961" euler="0 -0.80784 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.18081 0 0.22673" euler="0 -0.89760 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.15976 0 0.24202" euler="0 -0.98736 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.13742 0 0.25537" euler="0 -1.07712 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.11398 0 0.26666" euler="0 -1.16688 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.08961 0 0.27581" euler="0 -1.25664 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.06453 0 0.28273" euler="0 -1.34640 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.03893 0 0.28738" euler="0 -1.43616 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.01301 0 0.28971" euler="0 -1.52592 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.01301 0 0.28971" euler="0 -1.61568 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.03894 0 0.28738" euler="0 -1.70544 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.06453 0 0.28273" euler="0 -1.79520 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.08962 0 0.27581" euler="0 -1.88496 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.11398 0 0.26666" euler="0 -1.97472 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.13742 0 0.25537" euler="0 -2.06448 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.15976 0 0.24202" euler="0 -2.15424 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.18081 0 0.22673" euler="0 -2.24400 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.20041 0 0.20961" euler="0 -2.33376 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.21839 0 0.19080" euler="0 -2.42352 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.23461 0 0.17046" euler="0 -2.51327 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.24895 0 0.14874" euler="0 -2.60303 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.26128 0 0.12583" euler="0 -2.69279 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.27151 0 0.10190" euler="0 -2.78255 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.27955 0 0.07715" euler="0 -2.87231 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.28534 0 0.05178" euler="0 -2.96207 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.28883 0 0.02600" euler="0 -3.05183 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.29000 0 0.00000" euler="0 -3.14159 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.28883 0 -0.02600" euler="0 -3.23135 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.28534 0 -0.05178" euler="0 -3.32111 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.27955 0 -0.07715" euler="0 -3.41087 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.27151 0 -0.10189" euler="0 -3.50063 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.26128 0 -0.12582" euler="0 -3.59039 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.24895 0 -0.14874" euler="0 -3.68015 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.23462 0 -0.17046" euler="0 -3.76991 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.21839 0 -0.19080" euler="0 -3.85967 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.20041 0 -0.20961" euler="0 -3.94943 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.18081 0 -0.22673" euler="0 -4.03919 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.15976 0 -0.24202" euler="0 -4.12895 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.13742 0 -0.25537" euler="0 -4.21871 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.11398 0 -0.26666" euler="0 -4.30847 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.08962 0 -0.27581" euler="0 -4.39823 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.06453 0 -0.28273" euler="0 -4.48799 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.03893 0 -0.28738" euler="0 -4.57775 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="-0.01301 0 -0.28971" euler="0 -4.66751 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.01301 0 -0.28971" euler="0 -4.75727 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.03893 0 -0.28738" euler="0 -4.84703 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.06453 0 -0.28273" euler="0 -4.93679 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.08962 0 -0.27581" euler="0 -5.02655 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.11398 0 -0.26666" euler="0 -5.11631 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.13742 0 -0.25537" euler="0 -5.20607 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.15976 0 -0.24202" euler="0 -5.29583 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.18081 0 -0.22673" euler="0 -5.38559 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.20041 0 -0.20961" euler="0 -5.47535 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.21839 0 -0.19080" euler="0 -5.56511 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.23462 0 -0.17046" euler="0 -5.65487 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.24895 0 -0.14874" euler="0 -5.74463 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.26128 0 -0.12583" euler="0 -5.83439 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.27151 0 -0.10190" euler="0 -5.92415 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.27955 0 -0.07715" euler="0 -6.01391 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.28534 0 -0.05178" euler="0 -6.10367 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+        <geom type="box" size="0.005 0.280 0.0127" pos="0.28883 0 -0.02600" euler="0 -6.19343 0" rgba="0.6 0.6 0.65 0" contype="1" conaffinity="1"/>
+      </body>
+    </body>
+
+
+        <!-- 1. 하단 받침대 -->
+    <!-- <geom name="base_stand" type="box" rgba="0.8 0.82 0.85 1" contype="1" conaffinity="1" size="0.343 0.4375 0.18" pos="0 0 0.18"/> -->
+
+    <!-- 2. 상단 몸통 -->
+    <!-- <body name="main_casing" pos="0 0 0.36">
+      <geom name="main_body_back" type="box" rgba="0.8 0.82 0.85 1" contype="1" conaffinity="1" size="0.343 0.01 0.555" pos="0 -0.4275 0.555"/>
+      <geom name="main_body_left" type="box" rgba="0.8 0.82 0.85 1" contype="1" conaffinity="1" size="0.01 0.4375 0.555" pos="-0.333 0 0.555"/>
+      <geom name="main_body_right" type="box" rgba="0.8 0.82 0.85 1" contype="1" conaffinity="1" size="0.01 0.4375 0.555" pos="0.333 0 0.555"/>
+      <geom name="main_body_top" type="box" rgba="0.8 0.82 0.85 1" contype="1" conaffinity="1" size="0.343 0.4375 0.01" pos="0 0 1.105"/>
+      <geom name="main_body_bottom" type="box" rgba="0.8 0.82 0.85 1" contype="1" conaffinity="1" size="0.343 0.4375 0.01" pos="0 0 0.005"/>
+    </body> -->
+
+  </body>
+</mujocoinclude>

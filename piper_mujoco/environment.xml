@@ -1,0 +1,50 @@
+<mujoco model='piper'>
+
+  <compiler angle="radian" meshdir="agilex_piper/assets"/>
+
+  <option integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <include file="object/assets.xml"/>
+  <include file="object/actuator.xml"/>
+  <include file="object/default.xml"/>
+
+  <custom>
+    <numeric name="init_cam_distance" data="2"/> 
+    <numeric name="init_cam_azimuth" data="270"/>
+    <numeric name="init_cam_elevation" data="-30"/>
+  </custom>
+
+  <worldbody>
+    <!-- <camera name= "omniscient_view" pos = " 1.0 0 1.0 " euler = "0 0 3.14" mode="fixed"/> -->
+
+    <include file="object/scene.xml" />    
+    <include file = "agilex_piper/piper_model.xml"/>  
+
+    <body name="washing_machine" pos="-0.35 -0.1 -0.36" euler="1.57 0 0">
+        <include file="object/washing_machine.xml" />
+        <geom type="mesh" mesh="washer_mesh" rgba="1 1 1 0.8" contype="0" conaffinity="0" />
+    </body>
+
+    <body name="basket" pos="0.3 0.05 0" euler="0 0 1.5707963267948966">
+        <include file="object/basket.xml"/>
+    </body>
+
+    <!-- <body name="table" pos="0.6 0 0.3" euler="0 0 1.5707963267948966">
+        <include file="object/table.xml"/>
+    </body> -->
+
+  </worldbody>
+
+  <contact>
+    <exclude body1="base_link" body2="link1"/>
+  </contact>
+
+  <equality>
+    <joint joint1="joint8" joint2="joint7" polycoef="0 -1 0 0 0"/>
+  </equality>
+
+  <keyframe>
+    <key name="home" qpos="0 1.57 -1.3485 0 0 0 0 0 " ctrl="0 1.57 -1.3485 0 0 0 0"/>
+  </keyframe>
+
+</mujoco>

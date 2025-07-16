@@ -1,0 +1,15 @@
+<mujocoinclude>
+
+  <body>
+    <geom mesh="d435i_0" material="IR_Lens" type="mesh" contype="1" conaffinity="1" mass="0"/>
+    <geom mesh="d435i_1" material="IR_Emitter_Lens" type="mesh" contype="1" conaffinity="1" mass="0"/>
+    <geom mesh="d435i_2" material="IR_Rim" type="mesh" contype="1" conaffinity="1" mass="0"/>
+    <geom mesh="d435i_3" material="IR_Lens" type="mesh" contype="1" conaffinity="1" mass="0"/>
+    <geom mesh="d435i_4" material="Cameras_Gray" type="mesh" contype="1" conaffinity="1" mass="0"/>
+    <geom mesh="d435i_5" material="Black_Acrylic" type="mesh" contype="1" conaffinity="1" mass="0"/>
+    <geom mesh="d435i_6" material="Black_Acrylic" type="mesh" contype="1" conaffinity="1" mass="0"/>
+    <geom mesh="d435i_7" material="RGB_Pupil" type="mesh" contype="1" conaffinity="1" mass="0"/>
+    <geom mesh="d435i_8" mass="0.072" material="Metal_Casing" type="mesh" contype="1" conaffinity="1"/>
+  </body>
+
+</mujocoinclude>

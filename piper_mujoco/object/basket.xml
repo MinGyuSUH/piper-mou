@@ -1,0 +1,29 @@
+<mujocoinclude>
+  <body>
+    <!-- 바닥 -->
+    <geom name="basket_bottom" type="box"
+          size="0.1185 0.1975 0.0125"
+          pos="0 0 0.0125"
+          rgba="0.8 0.6 0.5 1"/>
+
+    <!-- 앞/뒤 벽 -->
+    <geom name="basket_wall_front" type="box"
+          size="0.1185 0.002 0.079"
+          pos="0 0.1995 0.079"
+          rgba="0.8 0.6 0.5 1"/>
+              <geom name="basket_wall_back" type="box"
+          size="0.1185 0.002 0.079"
+          pos="0 -0.1995 0.079"
+          rgba="0.8 0.6 0.5 1"/>
+
+    <!-- 좌/우 벽 -->
+    <geom name="basket_wall_left" type="box"
+          size="0.002 0.1975 0.079"
+          pos="0.1205 0 0.079"
+          rgba="0.8 0.6 0.5 1"/>
+              <geom name="basket_wall_right" type="box"
+          size="0.002 0.1975 0.079"
+          pos="-0.1205 0 0.079"
+          rgba="0.8 0.6 0.5 1"/>
+            </body>
+</mujocoinclude>
