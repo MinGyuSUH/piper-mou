@@ -1,3 +1,13 @@
+
+ros2 run piper piper_single_ctrl --ros-args -p can_port:=can0 -p gripper_exist:=true -p gripper_val_mutiple:=2
+ros2 service call /enable_srv piper_msgs/srv/Enable enable_request:\ true\
+ros2 launch piper_with_gripper_moveit demo.launch.py
+
+
+
+
+
+
 # piper 机械臂ROS(humble)
 
 ![ubuntu](https://img.shields.io/badge/Ubuntu-22.04-orange.svg)
