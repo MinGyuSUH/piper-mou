@@ -193,7 +193,7 @@ class PiperRosNode(Node):
         # self.joint_states.velocity = [vel_0, vel_1, vel_2, vel_3, vel_4, vel_5, 0.0]
         # self.joint_states.effort = [effort_0, effort_1, effort_2, effort_3, effort_4, effort_5, effort_6]
         self.joint_states.position = [joint_0,joint_1, joint_2, joint_3, joint_4, joint_5,joint_7,joint_8]
-        self.joint_states.velocity = [vel_0, vel_1, vel_2, vel_3, vel_4, vel_5, 0.0]
+        self.joint_states.velocity = [vel_0, vel_1, vel_2, vel_3, vel_4, vel_5, 0.0, 0.0]
         self.joint_states.effort = [effort_0, effort_1, effort_2, effort_3, effort_4, effort_5, effort_7, effort_8]
 
         self.joint_pub.publish(self.joint_states)
@@ -275,7 +275,7 @@ class PiperRosNode(Node):
         Args:
             joint_data (): The joint data
         """
-        self.get_logger().info(f"[DEBUG] : {self.GetEnableFlag()}")
+        # self.get_logger().info(f"[DEBUG] : {self.GetEnableFlag()}")
         # self.get_logger().info(f"joint ctrl single 받음 : {joint_data}")
         
         factor = 57324.840764  # 1000*180/3.14
@@ -291,14 +291,14 @@ class PiperRosNode(Node):
 
         # 遍历joint_data.name来映射位置
         for idx, joint_name in enumerate(joint_data.name):
-            self.get_logger().info(f"{joint_name}: {joint_data.position[idx]}")
+            # self.get_logger().info(f"{joint_name}: {joint_data.position[idx]}")
             joint_positions[joint_name] = round(joint_data.position[idx] * factor)
         
         # 获取第7个关节的位置
         if len(joint_data.position) >= 7:
             # self.get_logger().info(f"joint_7: {joint_data.position[6]}")
             # joint_6 = round(joint_data.position[6] * 1000 * 1000)
-            joint_6 = round( (joint_data.position[5] - joint_data.position[6])  * 1000 * 1000 /2)
+            joint_6 = round( (joint_data.position[6] - joint_data.position[7])  * 1000 * 1000 /2)
             joint_6 = clip(joint_6, 0, 80000)
 
             joint_6 = joint_6 * self.gripper_val_mutiple
@@ -333,7 +333,7 @@ class PiperRosNode(Node):
             # 夹爪控制
             if self.gripper_exist:
                 if len(joint_data.effort) >= 7:
-                    gripper_effort = clip(joint_data.effort[6], 0.5, 3)
+                    gripper_effort = ( clip(joint_data.effort[6], 0.5, 3) + clip(joint_data.effort[7], 0.5, 3) ) /2
                     # self.get_logger().info(f"gripper_effort: {gripper_effort}")
                     if not math.isnan(gripper_effort):
                         gripper_effort = round(gripper_effort * 1000)

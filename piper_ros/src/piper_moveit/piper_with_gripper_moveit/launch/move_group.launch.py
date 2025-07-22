@@ -25,8 +25,8 @@ from moveit_configs_utils.launch_utils import (
 
 def generate_launch_description():
     moveit_config = MoveItConfigsBuilder("piper", package_name="piper_with_gripper_moveit").to_moveit_configs()
-    # return generate_move_group_launch(moveit_config)
-    return generate_move_group_launch_me(moveit_config)
+    return generate_move_group_launch(moveit_config)
+    # return generate_move_group_launch_me(moveit_config)
 
 
 

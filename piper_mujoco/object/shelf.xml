@@ -1,0 +1,23 @@
+<mujocoinclude>
+  <body name="desk">
+
+    <!-- 상판 -->
+    <geom name="desk_top" type="box"
+          size="0.28 0.10 0.015" 
+          pos="0 0 0.33"        
+          rgba="0.6 0.4 0.2 1"/>
+
+    <!-- 왼쪽 다리 -->
+    <geom name="desk_leg_left" type="box"
+          size="0.015 0.10 0.165"  
+          pos="-0.26 0 0.165"      
+          rgba="0.4 0.3 0.2 1"/>
+
+    <!-- 오른쪽 다리 -->
+    <geom name="desk_leg_right" type="box"
+          size="0.015 0.10 0.165"
+          pos="0.26 0 0.165"
+          rgba="0.4 0.3 0.2 1"/>
+
+  </body>
+</mujocoinclude>
