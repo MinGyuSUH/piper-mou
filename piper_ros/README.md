@@ -6,9 +6,9 @@ sudo ip link set up can0
 
 candump can0 # 통신 확인
 
-ros2 run piper piper_single_ctrl --ros-args -p can_port:=can0 -p gripper_exist:=true -p gripper_val_mutiple:=2
+ros2 run piper piper_single_ctrl --ros-args -p can_port:=can0 -p gripper_exist:=true -p gripper_val_mutiple:=2 # 실제 HW 제어 노드
 
-ros2 service call /enable_srv piper_msgs/srv/Enable enable_request:\ true\
+ros2 service call /enable_srv piper_msgs/srv/Enable enable_request:\ true\ # 활성화
 
 ### 2. moveit 실행
 
