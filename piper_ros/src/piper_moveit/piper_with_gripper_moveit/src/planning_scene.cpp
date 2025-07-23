@@ -86,9 +86,9 @@ void addWasherDrum(moveit::planning_interface::PlanningSceneInterface& psi) //�
   const double radius = 0.185;
   const double center_y = 0.3+wm_y;  // wm_y 포함된 y
   const double center_z = 0.875;
-  const double box_thickness = 0.0161*2;  // x축 방향 길이
-  const double box_height = 0.0500*2;     // y축 방향 길이 (드럼 높이)
-  const double box_depth = 0.0161*2;      // z축 방향 길이
+  const double box_thickness = 0.017*2;  // x축 방향 길이
+  const double box_height = 0.1;     // y축 방향 길이 (드럼 높이)
+  const double box_depth = 0.017*2;      // z축 방향 길이
 
   for (int i = 0; i < num_segments; ++i)
   {
@@ -116,24 +116,24 @@ int main(int argc, char** argv)
   addWasherDrum(psi);
 
   // 책상 상판
-  addBox(psi, "desk_top", {0.56, 0.28, 0.03}, makePose(0.0, 0.0, 0.33));
+  addBox(psi, "desk_top", {0.56, 0.28, 0.04}, makePose(0.0, 0.0, 0.35));
   // 책상 왼쪽 다리
   addBox(psi, "desk_leg_left", {0.03, 0.28, 0.33}, makePose(-0.26, 0.0, 0.165));
   // 책상 오른쪽 다리
   addBox(psi, "desk_leg_right", {0.03, 0.28, 0.33}, makePose(0.26, 0.0, 0.165));
 
-  double basket_y = - (0.25+0.14);
+  double basket_y = - (0.22+0.14);
 
   // addBox(psi, "s", {0.255, 0.255, 0.255}, makePose(0, 0.255/2, 0));
 
   // 바구니 - 바닥
-  addBox(psi, "basket_bottom", {0.4, 0.28, 0.025}, makePose(0.0, 0.0+basket_y, 0.0125));
+  addBox(psi, "basket_bottom", {0.36, 0.22, 0.02}, makePose(0.0, 0.0+basket_y, 0.01));
   // 바구니 - 앞/뒤 벽
-  addBox(psi, "basket_wall_front", {0.4, 0.004, 0.17}, makePose(0.0, 0.142+basket_y, 0.085));
-  addBox(psi, "basket_wall_back", {0.4, 0.004, 0.17}, makePose(0.0, -0.142+basket_y, 0.085));
+  addBox(psi, "basket_wall_front", {0.36, 0.004, 0.17}, makePose(0.0, 0.11+basket_y, 0.085));
+  addBox(psi, "basket_wall_back", {0.36, 0.004, 0.17}, makePose(0.0, -0.11+basket_y, 0.085));
   // 바구니 - 좌/우 벽
-  addBox(psi, "basket_wall_left", {0.004, 0.28, 0.17}, makePose(0.202, 0.0+basket_y, 0.085));
-  addBox(psi, "basket_wall_right", {0.004, 0.28, 0.17}, makePose(-0.202, 0.0+basket_y, 0.085));
+  addBox(psi, "basket_wall_left", {0.004, 0.22, 0.17}, makePose(0.18, 0.0+basket_y, 0.085));
+  addBox(psi, "basket_wall_right", {0.004, 0.22, 0.17}, makePose(-0.18, 0.0+basket_y, 0.085));
 
   // // 세탁기 - 앞판 위쪽
   addBox(psi, "front_top", {0.6860, 0.01, 0.4000}, makeRotatedPose(0, 0.255+wm_y, 1.26000, 0.00000, 0.00000, 0.00000));
