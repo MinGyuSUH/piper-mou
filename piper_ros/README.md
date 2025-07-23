@@ -10,6 +10,12 @@ ros2 run piper piper_single_ctrl --ros-args -p can_port:=can0 -p gripper_exist:=
 
 ros2 service call /enable_srv piper_msgs/srv/Enable enable_request:\ true\ # 활성화
 
+
+##### with topie 
+<ros2 topic pub /enable_flag std_msgs/msg/Bool data:\ true\ >
+
+
+
 ### 2. moveit 실행
 
 ros2 launch piper_with_gripper_moveit wm_demo.launch.py # sim
