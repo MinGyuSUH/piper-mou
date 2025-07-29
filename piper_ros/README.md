@@ -54,7 +54,7 @@ ros2 launch piper_with_gripper_moveit wm_demo.launch.py real:=true
 ## 3. 조인트 명령어 실행
 
 ```bash
-ros2 run piper_with_gripper_moveit joint_goal_node
+ros2 run piper_with_gripper_moveit joint_goal_cmd_node
 ```
 
 명령어 실행 후 터미널에 조인트 8개 값(라디안) 입력
