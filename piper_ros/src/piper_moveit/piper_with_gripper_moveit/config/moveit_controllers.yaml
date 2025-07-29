@@ -30,3 +30,8 @@ moveit_simple_controller_manager:
       - joint8
     action_ns: follow_joint_trajectory
     default: true
+
+  trajectory_execution:
+    allowed_execution_duration_scaling: 10.0
+    allowed_goal_duration_margin : 5.0
+    execution_duration_monitoring: true

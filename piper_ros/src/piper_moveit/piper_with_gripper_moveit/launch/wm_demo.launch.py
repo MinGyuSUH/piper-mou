@@ -24,26 +24,12 @@ def generate_launch_description():
     )
 
 
-
     planning_scene_node = Node(
         package="piper_with_gripper_moveit",
         executable="planning_scene_node",
         name="planning_scene_node",
         output="screen"
     )
-
-    # # generate_demo_launch는 LaunchDescription을 반환하므로,
-    # # 여기에 planning_scene_node를 추가해서 LaunchDescription에 포함시켜야 함.
-    # demo_launch = generate_demo_launch(moveit_config)
-
-    # # LaunchDescription은 add_action()으로 노드를 추가할 수 있음
-    # for arg in declared_Arguments:
-    #     demo_launch.add_action(arg)
-    # demo_launch.add_action(planning_scene_node)
-
-    # # demo_launch.add_action(DeclareLaunchArgument("real", default_value="false", description="real_hw"))
-
-    # return demo_launch
 
     ld = LaunchDescription()
 

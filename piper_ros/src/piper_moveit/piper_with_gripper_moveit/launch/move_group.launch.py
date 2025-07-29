@@ -1,6 +1,9 @@
 from moveit_configs_utils import MoveItConfigsBuilder
 from moveit_configs_utils.launches import generate_move_group_launch
 
+from ament_index_python.packages import get_package_share_directory
+import yaml
+
 import os
 
 from launch import LaunchDescription
@@ -25,8 +28,8 @@ from moveit_configs_utils.launch_utils import (
 
 def generate_launch_description():
     moveit_config = MoveItConfigsBuilder("piper", package_name="piper_with_gripper_moveit").to_moveit_configs()
-    return generate_move_group_launch(moveit_config)
-    # return generate_move_group_launch_me(moveit_config)
+    # return generate_move_group_launch(moveit_config)
+    return generate_move_group_launch_me(moveit_config)
 
 
 
@@ -78,10 +81,13 @@ def generate_move_group_launch_me(moveit_config):
          "publish_transforms_updates": should_publish,
          "monitor_dynamics": False,
      }
+
+     trajectory_yaml = load_yaml('piper_with_gripper_moveit', 'config/trajectory_execution.yaml')
   
      move_group_params = [
          moveit_config.to_dict(),
          move_group_configuration,
+         trajectory_yaml
      ]
   
      add_debuggable_node(
@@ -98,3 +104,9 @@ def generate_move_group_launch_me(moveit_config):
 
      )
      return ld
+
+def load_yaml(package_name, file_path):
+    pkg_path = get_package_share_directory(package_name)
+    full_path = os.path.join(pkg_path, file_path)
+    with open(full_path, 'r') as f:
+        return yaml.safe_load(f)

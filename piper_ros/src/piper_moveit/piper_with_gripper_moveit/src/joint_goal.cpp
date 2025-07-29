@@ -1,77 +1,111 @@
+#include <memory>
+#include <thread>
+#include <string>
+#include <vector>
 #include <rclcpp/rclcpp.hpp>
-#include <moveit/move_group_interface/move_group_interface.h>
-#include <moveit/planning_scene_interface/planning_scene_interface.h>
-#include <trajectory_msgs/msg/joint_trajectory.hpp>
-#include <trajectory_msgs/msg/joint_trajectory_point.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>
+#include <moveit/move_group_interface/move_group_interface.h>
 #include <control_msgs/action/follow_joint_trajectory.hpp>
 
-using namespace std::chrono_literals;
+// 타입 별칭
+using FollowJointTrajectory = control_msgs::action::FollowJointTrajectory;
+using GoalHandleFJT = rclcpp_action::ServerGoalHandle<FollowJointTrajectory>;
+using namespace std::placeholders;
 
-int main(int argc, char** argv)
+// MoveGroup과 액션 서버를 묶는 작은 헬퍼 클래스
+class MoveItGroupActionServer
 {
-  rclcpp::init(argc, argv);
-  auto node = rclcpp::Node::make_shared("joint_goal_node");
-  rclcpp::executors::SingleThreadedExecutor exec;
-  exec.add_node(node);
+public:
+    MoveItGroupActionServer(rclcpp::Node::SharedPtr node, const std::string& group_name, const std::string& action_name)
+    : node_(node), group_name_(group_name), logger_(node->get_logger())
+    {
+        move_group_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>(node, group_name);
+        
+        if (move_group_->getJointNames().empty()) {
+            RCLCPP_ERROR(logger_, "MoveGroup '%s' 초기화 실패.", group_name.c_str());
+            return;
+        }
 
-  RCLCPP_INFO(node->get_logger(), "Starting MoveGroupInterface for 'arm'");
-  moveit::planning_interface::MoveGroupInterface move_group(node, "arm");
+        action_server_ = rclcpp_action::create_server<FollowJointTrajectory>(
+            node_,
+            action_name,
+            std::bind(&MoveItGroupActionServer::handle_goal, this, _1, _2),
+            std::bind(&MoveItGroupActionServer::handle_cancel, this, _1),
+            std::bind(&MoveItGroupActionServer::handle_accepted, this, _1)
+        );
+        RCLCPP_INFO(logger_, "'%s' 액션 서버가 '%s' 그룹을 위해 준비되었습니다.", action_name.c_str(), group_name.c_str());
+    }
 
-  std::vector<std::string> arm_joint_names = {
-    "joint1", "joint2", "joint3", "joint4", "joint5", "joint6"
-  };
-  std::vector<std::string> gripper_joint_names = {"joint7", "joint8"};
+private:
+    rclcpp::Node::SharedPtr node_;
+    std::string group_name_;
+    rclcpp::Logger logger_;
+    moveit::planning_interface::MoveGroupInterfacePtr move_group_;
+    rclcpp_action::Server<FollowJointTrajectory>::SharedPtr action_server_;
+    
+    // ... (핸들러 함수들은 이전과 거의 동일)
+    rclcpp_action::GoalResponse handle_goal(const rclcpp_action::GoalUUID &, std::shared_ptr<const FollowJointTrajectory::Goal> goal)
+    {
+        RCLCPP_INFO(logger_, "'%s' 액션: 목표 수신 (%ld points)", group_name_.c_str(), goal->trajectory.points.size());
+        if (goal->trajectory.joint_names.empty() || goal->trajectory.points.empty()) {
+            RCLCPP_ERROR(logger_, "'%s' 액션: 목표 거절 - 조인트/포인트 비어있음.", group_name_.c_str());
+            return rclcpp_action::GoalResponse::REJECT;
+        }
+        return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
+    }
 
-  std::vector<double> joint_values(8);
-  std::cout << "Enter joint values for joint1 to joint8 (space-separated): ";
-  for (int i = 0; i < 8; ++i)
-    std::cin >> joint_values[i];
+    rclcpp_action::CancelResponse handle_cancel(const std::shared_ptr<GoalHandleFJT> &)
+    {
+        RCLCPP_INFO(logger_, "'%s' 액션: 취소 요청 수신. 동작 중지.", group_name_.c_str());
+        move_group_->stop();
+        return rclcpp_action::CancelResponse::ACCEPT;
+    }
 
-  // Set arm goal
-  move_group.setJointValueTarget({
-    {"joint1", joint_values[0]},
-    {"joint2", joint_values[1]},
-    {"joint3", joint_values[2]},
-    {"joint4", joint_values[3]},
-    {"joint5", joint_values[4]},
-    {"joint6", joint_values[5]},
-  });
+    void handle_accepted(const std::shared_ptr<GoalHandleFJT> &goal_handle)
+    {
+        std::thread{std::bind(&MoveItGroupActionServer::execute, this, _1), goal_handle}.detach();
+    }
 
-  // Plan and execute
-  auto success = static_cast<bool>(move_group.move());
-  if (!success)
-  {
-    RCLCPP_ERROR(node->get_logger(), "Failed to move arm");
+    void execute(const std::shared_ptr<GoalHandleFJT> &goal_handle)
+    {
+        const auto goal = goal_handle->get_goal();
+        auto result = std::make_shared<FollowJointTrajectory::Result>();
+        const auto &target_point = goal->trajectory.points.back();
+        
+        move_group_->setJointValueTarget(target_point.positions);
+        
+        moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+        if (move_group_->plan(my_plan) == moveit::core::MoveItErrorCode::SUCCESS) {
+            if (move_group_->execute(my_plan) == moveit::core::MoveItErrorCode::SUCCESS) {
+                result->error_code = FollowJointTrajectory::Result::SUCCESSFUL;
+                goal_handle->succeed(result);
+            } else {
+                result->error_code = FollowJointTrajectory::Result::PATH_TOLERANCE_VIOLATED;
+                goal_handle->abort(result);
+            }
+        } else {
+            result->error_code = FollowJointTrajectory::Result::PATH_TOLERANCE_VIOLATED;
+            goal_handle->abort(result);
+        }
+    }
+};
+
+int main(int argc, char **argv)
+{
+    rclcpp::init(argc, argv);
+    
+    rclcpp::NodeOptions node_options;
+    node_options.automatically_declare_parameters_from_overrides(true);
+    auto node = std::make_shared<rclcpp::Node>("moveit_action_server_node", node_options);
+
+    // 팔(arm)과 그리퍼(gripper)를 위한 액션 서버를 각각 생성
+    auto arm_action_server = MoveItGroupActionServer(node, "arm", "/moveit_action/arm_controller/follow_joint_trajectory");
+    auto gripper_action_server = MoveItGroupActionServer(node, "gripper", "/moveit_action/gripper_controller/follow_joint_trajectory");
+    
+    rclcpp::executors::MultiThreadedExecutor executor;
+    executor.add_node(node);
+    executor.spin();
+    
     rclcpp::shutdown();
-    return 1;
-  }
-
-  // Create gripper action client
-  using FollowJointTrajectory = control_msgs::action::FollowJointTrajectory;
-  auto gripper_client = rclcpp_action::create_client<FollowJointTrajectory>(node, "/gripper_controller/follow_joint_trajectory");
-  if (!gripper_client->wait_for_action_server(5s))
-  {
-    RCLCPP_ERROR(node->get_logger(), "Gripper action server not available");
-    rclcpp::shutdown();
-    return 1;
-  }
-
-  // Send gripper goal
-  auto goal_msg = FollowJointTrajectory::Goal();
-  goal_msg.trajectory.joint_names = gripper_joint_names;
-  trajectory_msgs::msg::JointTrajectoryPoint point;
-  point.positions = {joint_values[6], joint_values[7]};
-  point.time_from_start = rclcpp::Duration::from_seconds(1.0);
-  goal_msg.trajectory.points.push_back(point);
-
-  goal_msg.trajectory.header.stamp = node->now();
-
-  auto send_goal_options = rclcpp_action::Client<FollowJointTrajectory>::SendGoalOptions();
-  gripper_client->async_send_goal(goal_msg, send_goal_options);
-
-  RCLCPP_INFO(node->get_logger(), "Sent gripper goal");
-
-  rclcpp::shutdown();
-  return 0;
+    return 0;
 }
