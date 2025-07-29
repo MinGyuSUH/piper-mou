@@ -53,6 +53,29 @@ ros2 launch piper_with_gripper_moveit wm_demo.launch.py real:=true
 
 ## 3. 조인트 명령어 실행
 
+### 액션 서버
+
+```bash
+ros2 run piper_with_gripper_moveit joint_goal_node
+```
+
+예시 (wm initial)
+
+```bash
+ros2 action send_goal /arm_controller/follow_joint_trajectory control_msgs/action/FollowJointTrajectory '{
+  "trajectory": {
+    "joint_names": ["joint1", "joint2", "joint3", "joint4", "joint5", "joint6"],
+    "points": [
+      {
+        "positions": [1.564081372, 0.453823104, -1.531984412, -0.048843, 1.279726728, 0.316922592],
+        "time_from_start": {"sec": 5, "nanosec": 0}
+      }
+    ]
+  }
+}'
+```
+### 커맨더
+
 ```bash
 ros2 run piper_with_gripper_moveit joint_goal_cmd_node
 ```
