@@ -73,8 +73,6 @@ ros2 action send_goal /arm_controller/follow_joint_trajectory control_msgs/actio
 
 ### 포지션 액션 서버
 
-예시 (wm initial)
-
 ```bash
 ros2 action send_goal /pose_goal piper_with_gripper_moveit/action/PoseGoal "{target_pose: {header: {frame_id: 'base_link'}, pose: {position: {x: 0.4, y: 0.0, z: 0.7}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}”
 ```
