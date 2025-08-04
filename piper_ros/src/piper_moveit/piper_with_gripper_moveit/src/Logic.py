@@ -35,7 +35,7 @@ class ControlTower(Node):
         )       
         
         self._arm_client = ActionClient(self, FollowJointTrajectory, '/moveit_action/arm_controller/follow_joint_trajectory')
-        self._gripper_client = ActionClient(self, FollowJointTrajectory, '/moveit_action/gripper_controller/follow_joint_trajectory')
+        self._gripper_client = ActionClient(self, FollowJointTrajectory, '/gripper_controller/follow_joint_trajectory')
 
         self.arm_joint_names = ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']
         self.gripper_joint_names = ['joint7', 'joint8']
@@ -50,33 +50,38 @@ class ControlTower(Node):
     def _send_goal(self, client, joint_names, joint_values, wait_for_result=True, timeout_sec=10.0):
         goal_msg = FollowJointTrajectory.Goal()
         goal_msg.trajectory.joint_names = joint_names
+        goal_msg.trajectory.header.stamp = self.get_clock().now().to_msg()
         point = JointTrajectoryPoint()
         point.positions = [float(x) for x in joint_values]
         
-        # <<< 여기가 수정된 부분입니다 >>>
-        point.time_from_start = Duration(sec=5, nanosec=0)
+        # 시간 분기: 그리퍼는 1초, 팔은 5초
+        if set(joint_names) == set(self.gripper_joint_names):
+            point.time_from_start = Duration(sec=1, nanosec=0)
+        else:
+            point.time_from_start = Duration(sec=5, nanosec=0)
         
         goal_msg.trajectory.points.append(point)
 
         if not client.wait_for_server(timeout_sec=timeout_sec):
             self.get_logger().error(f"Action server '{client._action_name}' not available.")
             return False
-        
+
         send_goal_future = client.send_goal_async(goal_msg)
         rclpy.spin_until_future_complete(self, send_goal_future)
         goal_handle = send_goal_future.result()
-
-        if not goal_handle or not goal_handle.accepted: return False
-        if not wait_for_result: return True
+        if not goal_handle or not goal_handle.accepted:
+            return False
+        if not wait_for_result:
+            return True
 
         get_result_future = goal_handle.get_result_async()
         rclpy.spin_until_future_complete(self, get_result_future)
-        
+
         result = get_result_future.result()
         if not result:
             self.get_logger().error("결과를 받지 못했습니다.")
             return False
-        
+
         return result.status == GoalStatus.STATUS_SUCCEEDED
 
     def send_joint_command(self, joint_values_8dof):
@@ -89,8 +94,7 @@ class ControlTower(Node):
             self.get_logger().error("팔 이동 실패. 다음 동작을 취소합니다.")
             return False
 
-        self._send_goal(self._gripper_client, self.gripper_joint_names, gripper_target, wait_for_result=False)
-        time.sleep(1.5)
+        self._send_goal(self._gripper_client, self.gripper_joint_names, gripper_target, wait_for_result=True)
         
         self.get_logger().info(f"명령 완료: {joint_values_8dof}")
         return True
@@ -120,7 +124,7 @@ class ControlTower(Node):
 
         return True
 
-    def send_gripper_command(self, joint7, joint8, wait_for_result=False):
+    def send_gripper_command(self, joint7, joint8, wait_for_result=True):
         gripper_target = [joint7, joint8]
         return self._send_goal(
             self._gripper_client,
@@ -131,11 +135,11 @@ class ControlTower(Node):
 
     def open_gripper(self):
         self.get_logger().info("그리퍼 오픈")
-        return self.send_gripper_command(0.035, -0.035, wait_for_result=False)
+        return self.send_gripper_command(0.035, -0.035, wait_for_result=True)
 
     def close_gripper(self):
         self.get_logger().info("그리퍼 클로즈")
-        return self.send_gripper_command(0.0, 0.0, wait_for_result=False)
+        return self.send_gripper_command(0.0, -0.0, wait_for_result=True)
 
     def check_z_and_contact(self):
         try:
@@ -147,21 +151,22 @@ class ControlTower(Node):
             norms = np.linalg.norm(vecs, axis=1)
             norms[norms == 0] = 1e-6
             unit_vecs = vecs / norms[:, None]
+            weights = norms
+            mean_vec = np.sum(unit_vecs * weights[:, None], axis=0) / np.sum(weights)
 
-            weights = np.linalg.norm(vecs, axis=1)
-            mean_vec = np.sum(vecs, axis=0) / np.sum(weights)
             norm_mean = np.linalg.norm(mean_vec)
             angle_deg = 0.0 if norm_mean < 1e-6 else np.degrees(np.arccos(
                 np.clip(mean_vec[2] / norm_mean, -1.0, 1.0)
             ))
 
-            self.z_aligned = norm_mean >= 0.7 and angle_deg <= 25.0
-            self.contacted = norm_mean >= 0.7 and angle_deg >= 25.0 and angle_deg <= 75.0
+            self.z_aligned = norm_mean >= 0.7 and (angle_deg <= 45.0)
+            self.contacted = norm_mean >= 0.7 and (45.0 < angle_deg < 135.0)
 
-            self.get_logger().info(f"[정렬 판단] MRL={norm_mean:.3f}, θ={angle_deg:.2f}°, 접촉={self.contacted}")
+            self.get_logger().info(
+                f"[정렬 판단] MRL={norm_mean:.3f}, θ={angle_deg:.2f}°, 접촉={self.contacted}"
+            )
 
             return self.z_aligned, self.contacted
-
         except Exception as e:
             self.get_logger().error(f"[Z 및 접촉 판단 오류] {e}")
             return False, False
@@ -207,60 +212,68 @@ class ControlTower(Node):
         except Exception as e:
             self.get_logger().error(f"[센서 콜백 오류] {e}")
 
+    def target_get(self):
+        time.sleep(1)
+        self.close_gripper()
+        time.sleep(2)
+
+    def overcome(self):
+        self.goal(self.center_upper, 'close')
+
 
     def execute_sequence(self):
         self.check_z_and_contact()
         self.get_logger().info("Step 1: 이니셜 포즈(ba_init)로 이동 중")
-        if not self.goal(self.ba_init, 'close'):
+        if not self.goal(self.ba_init, 'open'):
             self.get_logger().warn("  >> 실패 → 재시도")
-            if not self.goal(self.ba_init, 'close'):
+            if not self.goal(self.ba_init, 'open'):
                 self.get_logger().error("  >> 재시도 실패 → 시퀀스 종료")
                 return
+        self.reset_sensor_data()
 
-        self.get_logger().info("Step 2: Z-축 정렬 감지")
-        self.z_aligned, _ = self.check_z_and_contact()
-        if not self.z_aligned:
-            self.get_logger().warn("  >> 잡기 실패 → 이니셜 복귀 및 재시도")
-            if not self.goal(self.ba_init, 'open'):
-                self.get_logger().error("  >> 복귀 실패 → 시퀀스 종료")
-                return
+        count = 0
 
-            self.reset_sensor_data()
-            time.sleep(1.0)
-            self.close_gripper()
-            time.sleep(0.5)
+        while True:
+            # break
+            self.get_logger().info("Step 2: 잡기 시도 중...")
+            self.target_get()  # 감지 및 잡기 시도
 
-            start_time = time.time()
-            while self.sensor_update_count < 10:
-                rclpy.spin_once(self, timeout_sec=0.1)
-                if time.time() - start_time > 3.0:
-                    self.get_logger().error("  >> 센서 누적 대기 시간 초과 → 시퀀스 종료")
-                    return
-
-
+            self.get_logger().info("🔍 Z-축 정렬 감지")
             self.z_aligned, _ = self.check_z_and_contact()
-            if not self.z_aligned:
-                self.get_logger().error("  >> 잡기 재시도 실패 → 시퀀스 종료")
-                return
-            self.get_logger().info("  >> 잡기 성공")
-        else:
-            self.get_logger().info("  >> 잡기 성공")
+
+            if count == 1:
+                break
+
+            if self.z_aligned:
+                self.get_logger().info("✅ 잡기 성공")
+                break
+            else:
+                self.get_logger().warn("❌ 잡기 실패 → 이니셜 포즈(ba_init) 복귀 후 재시도")
+                if not self.goal(self.ba_init, 'open'):
+                    self.get_logger().warn("  >> 실패 → 재시도")
+                    if not self.goal(self.ba_init, 'open'):
+                        self.get_logger().error("  >> 재시도 실패 → 시퀀스 종료")
+                        return
+                self.reset_sensor_data()
+            count = 1
+
 
         self.get_logger().info("Step 3: 엔드 포즈(wm_end)로 이동 중")
-        if not self.goal(self.wm_end, 'open'):
+        if not self.goal(self.wm_end, 'keep'):
             self.get_logger().warn("  >> 실패 → 재시도")
-            if not self.goal(self.wm_end, 'open'):
+            if not self.goal(self.wm_end, 'keep'):
                 self.get_logger().error("  >> 재시도 실패 → 시퀀스 종료")
                 return
 
         self.get_logger().info("Step 4: 접촉 감지 결과 확인 중")
         _, self.contacted = self.check_z_and_contact()
+        self.open_gripper()
 
         if self.contacted:
             self.get_logger().info("  >> 접촉 감지됨 → 가운데로 이동")
-            if not self.goal(self.center_upper, 'close'):
+            if not self.overcome():
                 self.get_logger().warn("  >> 이동 실패 → 재시도")
-                if not self.goal(self.center_upper, 'close'):
+                if not self.overcome():
                     self.get_logger().error("  >> 재시도 실패 → 시퀀스 종료")
                     return
 
@@ -270,7 +283,7 @@ class ControlTower(Node):
                 if not self.goal(self.wm_end, 'open'):
                     self.get_logger().error("  >> 재시도 실패 → 시퀀스 종료")
                     return
-            
+
         else:
             self.get_logger().info("  >> 접촉 없음")
 
@@ -287,6 +300,7 @@ class ControlTower(Node):
                 return
 
         self.get_logger().info("--- 모든 시퀀스 완료 ---")
+        return
     
 
 def main(args=None):
