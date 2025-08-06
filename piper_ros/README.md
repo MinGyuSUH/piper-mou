@@ -84,7 +84,21 @@ ros2 run piper_with_gripper_moveit joint_goal_cmd_node
 ```
 
 명령어 실행 후 터미널에 조인트 8개 값(라디안) 입력
-
+### test initial wm 
+["1.5466199280000001", "0.45581172000000003", "-1.5898112720000002", "-0.09297652", "1.283110864", "0.3344887", "-0.000805", "-0.000805"]
+```bash
+ros2 action send_goal /arm_controller/follow_joint_trajectory control_msgs/action/FollowJointTrajectory '{
+  "trajectory": {
+    "joint_names": ["joint1", "joint2", "joint3", "joint4", "joint5", "joint6"],
+    "points": [
+      {
+        "positions": [1.546619928, 0.45581172, -1.589811272, -0.09297652, 1.283110864, 0.3344887],
+        "time_from_start": {"sec": 5, "nanosec": 0}
+      }
+    ]
+  }
+}'
+```
 ### 예시 위치값
 
 | 이름           | 조인트 값 (라디안) |
