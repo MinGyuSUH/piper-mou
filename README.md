@@ -6,6 +6,8 @@
 
 ## 1. CAN 통신 설정 및 제어 노드 실행
 
+piper setting : https://github.com/agilexrobotics/piper_ros/tree/humble
+
 ```bash
 # CAN 인터페이스 설정 (bitrate: 1 Mbps)
 sudo ip link set can0 type can bitrate 1000000
