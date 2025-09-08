@@ -57,6 +57,8 @@ ros2 launch piper_with_gripper_moveit wm_demo.launch.py real:=true
 
 ### target_pose_server 실행
 
+realsense-viewer
+
 ```bash
 cd ros2_ws/src/piper_ros/src/piper_moveit/piper_with_gripper_moveit/src함
 
