@@ -1,5 +1,6 @@
 
-# https://github.com/MinGyuSUH/piper-laundry : 여기에 새로 업데이트를 함(2025.11.24)
+# 아래 레포에 새로 업데이트를 함(2025.11.24)
+# https://github.com/MinGyuSUH/piper-laundry 
 
 
 
