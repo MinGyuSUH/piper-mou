@@ -2,6 +2,8 @@
 
 이 문서는 CAN 통신 설정부터 실제 로봇 제어 및 MoveIt 실행까지의 전체 명령어 흐름을 정리한 가이드입니다.
 
+https://github.com/MinGyuSUH/piper-laundry : 여기에 새로 업데이트를 함
+
 ---
 
 ## 1. CAN 통신 설정 및 제어 노드 실행
